@@ -3,15 +3,18 @@ import NavBar from "./components/NavBar";
 import GameGrid from "./components/GameGrid";
 import GenreList from "./components/GenreList";
 import { useState } from "react";
-import { Genre } from './hooks/useGenres'
+import { Genre } from "./hooks/useGenres";
 import PlatformSelector from "./components/PlatformSelector";
 import { Platform } from "./hooks/useGames";
 import { parent_platform } from "./hooks/usePlatforms";
 
-function App() {
+export interface GameQuery {
+  genre: Genre | null;
+  platform: parent_platform | null;
+}
 
-  const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
-  const [selectedPlatform, setSelectedPlatform] = useState<parent_platform | null>(null);
+function App() {
+  const [gameQuery, setGameQuery] = useState<GameQuery>({} as GameQuery);
 
   return (
     <Grid
@@ -19,23 +22,34 @@ function App() {
         base: `"nav" "main"`,
         lg: `"nav nav" "aside main"`,
       }}
-
       templateColumns={{
-        base: '1fr',
-        lg: '200px 1fr'
+        base: "1fr",
+        lg: "200px 1fr",
       }}
     >
       <GridItem area="nav">
         <NavBar></NavBar>
       </GridItem>
       <Show above="lg">
-        <GridItem area='aside' paddingX={5}>
-          <GenreList onSelectedGenre={(genre) => setSelectedGenre(genre)} selectedGenre={selectedGenre} />
+        <GridItem area="aside" paddingX={5}>
+          <GenreList
+            onSelectedGenre={(genre) =>
+              setGameQuery({ ...gameQuery, genre: genre })
+            }
+            selectedGenre={gameQuery.genre}
+          />
         </GridItem>
       </Show>
       <GridItem area="main">
-        <PlatformSelector selectedPlatform={selectedPlatform} onSelectedPlatform={(platform) => setSelectedPlatform(platform)}/>
-        <GameGrid selectedPlatform = {selectedPlatform} selectedGenre={selectedGenre}/>
+        <PlatformSelector
+          selectedPlatform={gameQuery.platform}
+          onSelectedPlatform={(platform) =>
+            setGameQuery({ ...gameQuery, platform: platform })
+          }
+        />
+        <GameGrid
+          gameQuery={gameQuery}
+        />
       </GridItem>
     </Grid>
   );

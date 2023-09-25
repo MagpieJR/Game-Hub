@@ -4,6 +4,7 @@ import { CanceledError } from "axios";
 import useData from "../services/useData";
 import { Genre } from "./useGenres";
 import { parent_platform } from "./usePlatforms";
+import { GameQuery } from "../App";
 
 export interface Platform {
   id: number;
@@ -20,13 +21,12 @@ export interface Game {
 }
 
 const useGames = (
-  selectedGenre: Genre | null,
-  selectedPlatform: parent_platform | null
+  gameQuery: GameQuery
 ) =>
   useData<Game>(
     "/games",
-    { params: { genres: selectedGenre?.id, platforms: selectedPlatform?.id } },
-    [selectedGenre?.id, selectedPlatform?.id]
+    { params: { genres: gameQuery.genre?.id, platforms: gameQuery.platform?.id } },
+    [gameQuery.genre?.id, gameQuery.platform?.id]
   );
 
 export default useGames;
