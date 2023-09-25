@@ -5,10 +5,11 @@ import GenreSkeleton from "./GenreSkeleton";
 import { skeletons } from "./GameGrid";
 
 interface Props{
-  onSelectedGenre: (genre: Genre) => void
+  onSelectedGenre: (genre: Genre) => void,
+  selectedGenre: Genre | null,
 }
 
-const GenreList = ({ onSelectedGenre }: Props) => {
+const GenreList = ({ onSelectedGenre, selectedGenre }: Props) => {
   const { data, isLoading, error } = useGenres();
 
   if (error) return null;
@@ -30,7 +31,7 @@ const GenreList = ({ onSelectedGenre }: Props) => {
               borderRadius={8}
               src={getCroppedImageUrl(genre.image_background)}
             />
-            <Box as='button' display='flex' flex-wrap='wrap' onClick={() => onSelectedGenre(genre)} fontSize="lg" > {genre.name} </Box>
+            <Box fontWeight={ genre.id === selectedGenre?.id ? 'bold' : 'normal'} as='button' display='flex' flex-wrap='wrap' onClick={() => onSelectedGenre(genre)} fontSize="lg" > {genre.name} </Box>
           </HStack>
         </ListItem>
       ))}
